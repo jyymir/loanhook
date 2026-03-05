@@ -1,0 +1,10 @@
+{
+  "monthlyIncome": 5000,
+  "transactions": [
+    {"name": "Landlord Rent", "amount": 1800, "category": "Housing"},
+    {"name": "Car Loan Payment", "amount": 450, "category": "Auto"},
+    {"name": "Student Loan Subsidized", "amount": 300, "category": "Education"},
+    {"name": "Groceries", "amount": 600, "category": "Food"},
+    {"name": "Gas Station", "amount": 150, "category": "Auto"}
+  ]
+}
