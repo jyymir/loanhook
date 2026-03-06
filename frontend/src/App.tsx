@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { LoginScreen } from "./components/LoginScreen";
+import { SignupScreen } from "./components/SignupScreen";
 import { OnboardingScreen } from "./components/OnboardingScreen";
 import { DashboardScreen } from "./components/DashboardScreen";
 import { LoanReadinessScreen } from "./components/LoanReadinessScreen";
@@ -8,8 +10,18 @@ import { BankReadyProfileScreen } from "./components/BankReadyProfileScreen";
 import { BottomNavigation } from "./components/BottomNavigation";
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authScreen, setAuthScreen] = useState<"login" | "signup">("login");
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false);
   const [activeScreen, setActiveScreen] = useState("dashboard");
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleSignup = () => {
+    setIsAuthenticated(true);
+  };
 
   const handleCompleteOnboarding = () => {
     setHasCompletedOnboarding(true);
@@ -18,6 +30,25 @@ export default function App() {
   const handleNavigate = (screen: string) => {
     setActiveScreen(screen);
   };
+
+  // Show login/signup if not authenticated
+  if (!isAuthenticated) {
+    if (authScreen === "login") {
+      return (
+        <LoginScreen
+          onLogin={handleLogin}
+          onNavigateToSignup={() => setAuthScreen("signup")}
+        />
+      );
+    } else {
+      return (
+        <SignupScreen
+          onSignup={handleSignup}
+          onNavigateToLogin={() => setAuthScreen("login")}
+        />
+      );
+    }
+  }
 
   if (!hasCompletedOnboarding) {
     return <OnboardingScreen onComplete={handleCompleteOnboarding} />;

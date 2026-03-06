@@ -159,6 +159,13 @@ export function LoanReadinessScreen({ onNavigate }: LoanReadinessScreenProps) {
           Try Loan Scenarios
         </button>
       </div>
+      <div className="px-6 mb-6 mt-12">
+        <div className="bg-gray-100 rounded-xl p-4  ">
+          <p className="text-xs text-gray-600 leading-relaxed">
+            @ Copyright 2024 LoanHook. All rights reserved. Jy'Mir Fuller & Jospeh Ajumobi | <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a> | <a href="#" className="text-blue-600 hover:underline">Terms of Service</a>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }
