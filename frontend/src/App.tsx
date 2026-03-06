@@ -24,8 +24,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-md mx-auto relative">
+    <div className="min-h-screen bg-gray-50 flex justify-center">
+      <div className="w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         {activeScreen === "dashboard" && <DashboardScreen onNavigate={handleNavigate} />}
         {activeScreen === "readiness" && <LoanReadinessScreen onNavigate={handleNavigate} />}
         {activeScreen === "improvement" && <ImprovementPlanScreen onNavigate={handleNavigate} />}
