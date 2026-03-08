@@ -10,6 +10,7 @@ import { ScenarioSimulatorScreen } from "./components/ScenarioSimulatorScreen";
 import { BankReadyProfileScreen } from "./components/BankReadyProfileScreen";
 import { BottomNavigation } from "./components/BottomNavigation";
 import { SideNavigation } from "./components/SideNavigation";
+import { BrowserRouter } from "react-router-dom";
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -61,6 +62,7 @@ export default function App() {
 
   // Show main app
   return (
+    <BrowserRouter>
     <div className="min-h-screen bg-gray-50">
       {/* Side Navigation for Desktop/Tablet */}
       <div className="hidden md:flex md:w-64 md:fixed md:inset-y-0">
@@ -83,5 +85,6 @@ export default function App() {
       <BottomNavigation activeScreen={activeScreen} onNavigate={handleNavigate} />
     </div>
     </div>
+    </BrowserRouter>
   );
 }
