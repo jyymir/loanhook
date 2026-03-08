@@ -63,7 +63,9 @@ export default function App() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Side Navigation for Desktop/Tablet */}
+      <div className="hidden md:flex md:w-64 md:fixed md:inset-y-0">
       <SideNavigation activeScreen={activeScreen} onNavigate={handleNavigate} />
+    </div>
       
       {/* Main Content */}
       <div className="md:ml-64">
@@ -77,7 +79,9 @@ export default function App() {
       </div>
       
       {/* Bottom Navigation for Mobile Only */}
+      <div className="md:hidden">
       <BottomNavigation activeScreen={activeScreen} onNavigate={handleNavigate} />
+    </div>
     </div>
   );
 }
