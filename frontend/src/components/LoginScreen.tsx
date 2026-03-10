@@ -25,9 +25,13 @@ export function LoginScreen({ onLogin, onNavigateToSignup }: LoginScreenProps) {
 
       if (data && data.token) {
         localStorage.setItem("token", data.token);
+        if ("user" in data && data.user) {
+          localStorage.setItem("user", JSON.stringify(data.user))
+        }
+
         onLogin();
       } else {
-        setError("Quick start unavailable. Please sign up manually.");
+        setError(data?.error || "Quick start unavailable. Please sign up manually.");
       }
     } catch (err) {
       setError("Server connection failed.");
@@ -47,6 +51,10 @@ export function LoginScreen({ onLogin, onNavigateToSignup }: LoginScreenProps) {
       // This is the fix: Only call onLogin if the database returns a token
       if (data && data.token) {
         localStorage.setItem("token", data.token);
+        if ("user" in data && data.user) {
+          localStorage.setItem("user", JSON.stringify(data.user))
+        }
+        
         onLogin(); 
       } else {
         setError(data.error || "Login failed. Please check your credentials.");

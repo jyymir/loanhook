@@ -16,6 +16,7 @@ export function SignupScreen({ onSignup, onNavigateToLogin }: SignupScreenProps)
     password: "",
     confirmPassword: ""
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,8 +42,12 @@ export function SignupScreen({ onSignup, onNavigateToLogin }: SignupScreenProps)
       // 1. Call the real backend signup service
       const data = await signup(formData.fullName, formData.email, formData.password);
 
-      if (data.token) {
+      if (data && data.token) {
+        if("user" in data && data.user){
+          localStorage.setItem("user", JSON.stringify(data.user));
+        }
         // 2. Pass the real token back to App.tsx
+
         onSignup(data.token);
       } else {
         setError(data.error || "Signup failed. Try a different email.");
@@ -60,6 +65,7 @@ export function SignupScreen({ onSignup, onNavigateToLogin }: SignupScreenProps)
 
   const passwordStrength = () => {
     const password = formData.password;
+    
     if (password.length === 0) return { strength: 0, label: "", color: "" };
     if (password.length < 6) return { strength: 25, label: "Weak", color: "bg-red-500" };
     if (password.length < 10) return { strength: 50, label: "Fair", color: "bg-yellow-500" };

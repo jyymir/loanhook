@@ -1,9 +1,11 @@
-const chance = require("chance").Chance();
+import Chance from 'chance';
 
-module.exports = () => {
+const chance = new Chance();
+
+const generateApplicant = (fullName = 'Demo User') => {
     return {
         applicantId: chance.integer({ min: 100, max: 9999}),
-        name: chance.name({ nationality: "en"}),
+        name: fullName,
         income: chance.integer({ min: 2000, max: 12000 }),
         savings: chance.integer({ min: 500, max: 50000 }),
         housing: chance.integer({ min: 700, max: 3500 }),
@@ -13,4 +15,6 @@ module.exports = () => {
         other: chance.integer({ min: 100, max: 1500 }),
         debt: chance.integer({ min: 0, max: 30000 }),
     };
-}
+};
+
+export default generateApplicant;

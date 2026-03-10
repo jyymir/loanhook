@@ -68,8 +68,10 @@ export default function App() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setIsAuthenticated(false);
     setAuthScreen("landing");
+    setActiveScreen("dashboard");
   };
 
   if (isLoading) {
@@ -113,7 +115,12 @@ export default function App() {
       case "onboarding":
         return <OnboardingScreen onNavigate={setActiveScreen} onComplete={() => setActiveScreen("dashboard")} />;
       case "dashboard":
-        return <DashboardScreen onNavigate={setActiveScreen} />;
+        return (
+          <DashboardScreen
+            onNavigate={setActiveScreen}
+            onAuthFailure={handleLogout}
+          />
+        );
       case "readiness":
         return <LoanReadinessScreen onNavigate={setActiveScreen} />;
       case "improvement":
@@ -123,7 +130,13 @@ export default function App() {
       case "profile":
         return <BankReadyProfileScreen onNavigate={setActiveScreen} />;
       default:
-        return <DashboardScreen onNavigate={setActiveScreen} />;
+        return (
+          <DashboardScreen 
+            onNavigate={setActiveScreen} 
+            onAuthFailure={handleLogout}
+            />
+
+        );
     }
   };
 
