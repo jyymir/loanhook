@@ -5,11 +5,14 @@ import financeRoutes from './routes/finance.js';
 import mongoose from 'mongoose';
 import authRoutes from './routes/authRoutes.js';
 
-
 dotenv.config();
+import aiRoutes from './routes/aiSuggestions.js';
+
+
+
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({origin : '*'})); // Allow all origins for development, adjust in production
 const PORT = process.env.PORT || 5001;
 
 mongoose.connect(process.env.MONGO_URI)
@@ -22,6 +25,7 @@ app.get('/', (req, res) => {
 
 app.use('/api/finance', financeRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/ai', aiRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on port http://localhost:${PORT}`);
