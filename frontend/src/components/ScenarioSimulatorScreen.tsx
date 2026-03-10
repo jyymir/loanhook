@@ -1,27 +1,57 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AlertTriangle, CheckCircle2, TrendingUp } from "lucide-react";
 import { Slider } from "./ui/slider";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer
+} from "recharts";
+import { useApplicantData } from "../hooks/useApplicantData";
+import { getMonthlyExpenses, getSafeLoanAmount } from "../utils/financialMetrics";
 
 export function ScenarioSimulatorScreen() {
+  const { applicant, loading } = useApplicantData();
+
   const [loanAmount, setLoanAmount] = useState([15000]);
   const [interestRate, setInterestRate] = useState([7.5]);
   const [loanTerm, setLoanTerm] = useState([36]);
 
-  const monthlyIncome = 4500;
-  const monthlyExpenses = 3200;
+  useEffect(() => {
+    if (applicant) {
+      setLoanAmount([Math.max(1000, Math.min(50000, getSafeLoanAmount(applicant)))]);
+    }
+  }, [applicant]);
+
+  if (loading) {
+    return <div className="p-6">Loading simulator...</div>;
+  }
+
+  if (!applicant) {
+    return <div className="p-6">No applicant data available.</div>;
+  }
+
+  const monthlyIncome = applicant.income;
+  const monthlyExpenses = getMonthlyExpenses(applicant);
   const availableIncome = monthlyIncome - monthlyExpenses;
 
   const r = interestRate[0] / 100 / 12;
   const n = loanTerm[0];
   const monthlyPayment =
-    (loanAmount[0] * r * Math.pow(1 + r, n)) /
-    (Math.pow(1 + r, n) - 1);
+    r === 0
+      ? loanAmount[0] / n
+      : (loanAmount[0] * r * Math.pow(1 + r, n)) /
+        (Math.pow(1 + r, n) - 1);
+
   const totalPayment = monthlyPayment * n;
   const totalInterest = totalPayment - loanAmount[0];
 
   const paymentToIncomeRatio = (monthlyPayment / monthlyIncome) * 100;
-  const paymentToAvailableRatio = (monthlyPayment / availableIncome) * 100;
+  const paymentToAvailableRatio =
+    availableIncome > 0 ? (monthlyPayment / availableIncome) * 100 : 100;
 
   const isAffordable = paymentToAvailableRatio < 50;
   const riskLevel =
@@ -41,7 +71,7 @@ export function ScenarioSimulatorScreen() {
       remainingBalance -= principalPayment * 6;
 
       schedule.push({
-        month: month,
+        month,
         balance: Math.max(0, remainingBalance),
         payment: monthlyPayment
       });

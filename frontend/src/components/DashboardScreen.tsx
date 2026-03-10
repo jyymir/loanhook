@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { TrendingUp, TrendingDown, CreditCard, PiggyBank } from "lucide-react";
 import {
   PieChart,
@@ -13,69 +12,15 @@ import {
   Tooltip
 } from "recharts";
 import { useNavigate } from "react-router-dom";
-
-interface Applicant {
-  applicantId: number;
-  name: string;
-  income: number;
-  savings: number;
-  housing: number;
-  food: number;
-  transport: number;
-  utilities: number;
-  other: number;
-  debt: number;
-}
+import { useApplicantData } from "../hooks/useApplicantData";
+import {
+  getMonthlyExpenses,
+  getReadinessScore
+} from "../utils/financialMetrics";
 
 export function DashboardScreen() {
   const navigate = useNavigate();
-  const [applicant, setApplicant] = useState<Applicant | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchApplicant = async () => {
-      try {
-        const token = localStorage.getItem("token");
-
-        if (!token) {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          navigate("/login");
-          return;
-        }
-
-        const response = await fetch("http://localhost:5001/api/dashboard", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-
-        const data = await response.json();
-
-        if (response.status === 401) {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          navigate("/login");
-          return;
-        }
-
-        if (!response.ok) {
-          throw new Error(data.error || "Failed to fetch dashboard data");
-        }
-
-        setApplicant(data);
-      } catch (error) {
-        console.error("Error fetching applicant data:", error);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        navigate("/login");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchApplicant();
-  }, [navigate]);
+  const { applicant, loading } = useApplicantData();
 
   if (loading) {
     return <div className="p-6">Loading dashboard...</div>;
@@ -85,25 +30,8 @@ export function DashboardScreen() {
     return <div className="p-6">No applicant data available.</div>;
   }
 
-  const monthlyExpenses =
-    applicant.housing +
-    applicant.food +
-    applicant.transport +
-    applicant.utilities +
-    applicant.other;
-
-  const readinessScore = Math.max(
-    0,
-    Math.min(
-      100,
-      Math.round(
-        50 +
-          applicant.savings / 200 -
-          applicant.debt / 500 -
-          monthlyExpenses / 1000
-      )
-    )
-  );
+  const monthlyExpenses = getMonthlyExpenses(applicant);
+  const readinessScore = getReadinessScore(applicant);
 
   const financialData = {
     monthlyIncome: applicant.income,
