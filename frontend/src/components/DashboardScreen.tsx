@@ -1,11 +1,15 @@
-import { DollarSign, TrendingUp, TrendingDown, CreditCard, PiggyBank, AlertCircle } from "lucide-react";
+import { DollarSign, TrendingUp, TrendingDown, CreditCard, PiggyBank } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
+import { useNavigate } from "react-router-dom"; // 1. Import hook
 
+// You can keep the interface empty or remove it if not needed for other props
 interface DashboardScreenProps {
-  onNavigate: (screen: string) => void;
+  onNavigate?: (screen: string) => void;
 }
 
 export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
+  const navigate = useNavigate(); // 2. Initialize navigate
+
   const financialData = {
     monthlyIncome: 4500,
     monthlyExpenses: 3200,
@@ -50,14 +54,19 @@ export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
         </div>
       </div>
 
-      {/* START OF THE WEB GRID */}
       <div className="max-w-7xl mx-auto px-6 -mt-10 grid grid-cols-1 md:grid-cols-12 gap-6">
         
         {/* Score Card */}
         <div className="md:col-span-5 bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg text-gray-900 font-semibold">Loan Readiness Score</h2>
-            <button onClick={() => onNavigate('readiness')} className="text-blue-600 text-sm hover:underline">Details →</button>
+            {/* 3. Updated to use navigate() */}
+            <button 
+              onClick={() => navigate('/readiness')} 
+              className="text-blue-600 text-sm hover:underline font-medium"
+            >
+              Details →
+            </button>
           </div>
           <div className="flex flex-col lg:flex-row items-center gap-6">
             <div className={`w-32 h-32 flex-shrink-0 rounded-full bg-gradient-to-br ${getScoreGradient(financialData.readinessScore)} flex items-center justify-center`}>
@@ -118,7 +127,7 @@ export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
           </div>
         </div>
 
-        {/* Expense Breakdown with List Fixed */}
+        {/* Expense Breakdown */}
         <div className="md:col-span-4 bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Expense Breakdown</h2>
           <div className="h-48 mb-6">
@@ -130,7 +139,6 @@ export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
               </PieChart>
             </ResponsiveContainer>
           </div>
-          {/* THE RE-ADDED LIST */}
           <div className="space-y-3">
             {expenseData.map((item) => (
               <div key={item.name} className="flex items-center justify-between">
@@ -161,7 +169,7 @@ export function DashboardScreen({ onNavigate }: DashboardScreenProps) {
           </div>
         </div>
 
-      </div> {/* END OF THE WEB GRID */}
+      </div>
 
       {/* Centered Footer */}
       <div className="max-w-7xl mx-auto px-6 mb-6 mt-12">

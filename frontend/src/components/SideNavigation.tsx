@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Home, TrendingUp, Target, Calculator, FileText, Languages } from "lucide-react";
+import { NavLink, useLocation } from "react-router-dom";
 
 declare global {
   interface Window {
@@ -9,20 +10,16 @@ declare global {
 }
 
 const setLanguage = (lang: 'en' | 'es') => {
-  // Use a cookie that works for both localhost and your final domain
   document.cookie = `googtrans=/en/${lang}; path=/`;
   document.cookie = `googtrans=/en/${lang}; domain=.localhost; path=/`;
-  
-  // A refresh is necessary for the background engine to catch the cookie change
   window.location.reload();
 };
 
-interface SideNavigationProps {
-  activeScreen: string;
-  onNavigate: (screen: string) => void;
-}
-
-export function SideNavigation({ activeScreen, onNavigate }: SideNavigationProps) {
+// Note: activeScreen and onNavigate props are no longer strictly needed 
+// because NavLink handles this automatically via the URL!
+export function SideNavigation() {
+  const location = useLocation();
+  
   const navItems = [
     { id: "dashboard", label: "Home", icon: Home },
     { id: "readiness", label: "Readiness", icon: TrendingUp },
@@ -34,7 +31,6 @@ export function SideNavigation({ activeScreen, onNavigate }: SideNavigationProps
   useEffect(() => {
     const initTranslate = () => {
       if (window.google && window.google.translate) {
-        // Only init if the div is empty
         const container = document.getElementById("google_translate_element");
         if (container && container.innerHTML === "") {
           new window.google.translate.TranslateElement({
@@ -47,10 +43,9 @@ export function SideNavigation({ activeScreen, onNavigate }: SideNavigationProps
       }
     };
 
-    // Increase timeout slightly to 1s to ensure full DOM paint
     const timer = setTimeout(initTranslate, 1000);
     return () => clearTimeout(timer);
-  }, [activeScreen]); // Added activeScreen dependency to re-check on nav
+  }, [location.pathname]); // Re-check whenever the URL path changes
 
   return (
     <div className="hidden md:flex md:flex-col w-64 bg-white border-r border-gray-200 fixed left-0 top-0 bottom-0 z-10">
@@ -65,25 +60,27 @@ export function SideNavigation({ activeScreen, onNavigate }: SideNavigationProps
         <div className="space-y-2">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeScreen === item.id;
+            
             return (
-              <button
+              <NavLink
                 key={item.id}
-                onClick={() => onNavigate(item.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                  isActive ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-50'
-                }`}
+                to={`/${item.id}`}
+                className={({ isActive }) => 
+                  `w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                    isActive 
+                      ? 'bg-blue-50 text-blue-600' 
+                      : 'text-gray-600 hover:bg-gray-50'
+                  }`
+                }
               >
                 <Icon className="w-5 h-5" />
                 <span className="font-medium">{item.label}</span>
-              </button>
+              </NavLink>
             );
           })}
         </div>
       </nav>
 
-      {/* Language Toggle - Added min-width and relative positioning */}
-      {/* Language Toggle */}
       <div className="mt-auto px-4 py-4 border-t border-gray-100">
         <div className="flex items-center justify-between px-3 py-2 bg-gray-50 rounded-xl border border-gray-100">
           <div className="flex items-center gap-2">
@@ -106,7 +103,6 @@ export function SideNavigation({ activeScreen, onNavigate }: SideNavigationProps
             </button>
           </div>
         </div>
-        {/* Keep this hidden div so the Google script can still load in the background */}
         <div id="google_translate_element" style={{ display: 'none' }}></div>
       </div>
 
