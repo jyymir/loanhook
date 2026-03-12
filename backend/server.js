@@ -18,20 +18,30 @@ import generateApplicant from './utils/generateApplicant.js';
 
 dotenv.config();
 
-// Debugging API Key
-console.log("Key Check:", process.env.GEMINI_API_KEY ? "Key is loaded ✅" : "Key is MISSING ❌");
+console.log(
+  "Key Check:",
+  process.env.GEMINI_API_KEY ? "Key is loaded ✅" : "Key is MISSING ❌"
+);
 
 const app = express();
+const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(express.json());
-// Allowing all origins for development to prevent CORS blocks
-app.use(cors({ origin: '*' })); 
 
-const PORT = process.env.PORT || 5001;
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://loanhook-441p.vercel.app"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
+  })
+);
 
 /**
- * Demo Account Logic: Ensures a test user exists for competition judges/testing
+ * Demo Account Logic
  */
 const createTestUser = async () => {
   try {
@@ -49,6 +59,7 @@ const createTestUser = async () => {
     }
 
     const existingProfile = await ApplicantProfile.findOne({ userId: user._id });
+
     if (!existingProfile) {
       const applicantData = generateApplicant(user.fullName);
       await ApplicantProfile.create({
@@ -62,15 +73,12 @@ const createTestUser = async () => {
   }
 };
 
-// Database Connection
-mongoose.connect(process.env.MONGO_URI)
-  .then(async () => {
-    console.log('Connected to MongoDB');
-    await createTestUser();
-  })
-  .catch(err => console.error('MongoDB connection error:', err));
+// Health route
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ message: 'Backend is running' });
+});
 
-// Base Route
+// Base route
 app.get('/', (req, res) => {
   res.send('Backend is working!');
 });
@@ -82,6 +90,17 @@ app.use('/api/ai', aiRoutes);
 app.use('/api/chat', chatrouter);
 app.use('/api/dashboard', dashboardRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port http://localhost:${PORT}`);
-});
+// Database Connection
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(async () => {
+    console.log('Connected to MongoDB');
+    await createTestUser();
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on port http://localhost:${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error('MongoDB connection error:', err);
+  });

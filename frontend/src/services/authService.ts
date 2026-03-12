@@ -15,13 +15,13 @@ export const signup = async (fullName: string, email: string, password: string) 
   try {
     const response = await fetch(`${AUTH_API_URL}/signup`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ fullName, email, password }),
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ fullName, email, password })
     });
 
     const data = await response.json();
-
-    console.log("Full backend response:", data);
 
     if (!response.ok) {
       return { error: data.message || data.error || "Signup failed" };
@@ -29,7 +29,7 @@ export const signup = async (fullName: string, email: string, password: string) 
 
     return data;
   } catch (error) {
-    console.error("Fetch Error:", error);
+    console.error("Signup Error:", error);
     return { error: "Could not connect to backend." };
   }
 };
@@ -38,8 +38,10 @@ export const login = async (email: string, password: string): Promise<AuthRespon
   try {
     const response = await fetch(`${AUTH_API_URL}/login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
     });
 
     const data = await response.json();
@@ -59,7 +61,9 @@ export const loginAsGuest = async () => {
   try {
     const response = await fetch(`${AUTH_API_URL}/guest-login`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" }
+      headers: {
+        "Content-Type": "application/json"
+      }
     });
 
     const data = await response.json();
