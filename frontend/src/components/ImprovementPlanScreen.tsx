@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Target,
   TrendingUp,
@@ -14,29 +14,41 @@ import {
   getReadinessScore,
   getMonthlyExpenses
 } from "../utils/financialMetrics";
+import { useNavigate } from "react-router";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ImprovementPlanProps {
   onNavigate?: (screen: string) => void;
 }
 
 export function ImprovementPlanScreen({ onNavigate }: ImprovementPlanProps) {
+  const navigate = useNavigate();
   const { applicant, loading } = useApplicantData();
   const [completedSteps, setCompletedSteps] = useState<string[]>([]);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-pulse text-blue-600 font-medium text-sm">
-          Loading plan...
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 flex items-center justify-center">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-gray-600"
+        >
+          Loading improvement plan...
+        </motion.div>
       </div>
     );
   }
 
   if (!applicant) {
     return (
-      <div className="p-6 text-center text-gray-500">
-        No applicant data available.
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 flex items-center justify-center">
+        <div className="text-gray-600">No applicant data available.</div>
       </div>
     );
   }
@@ -144,145 +156,210 @@ export function ImprovementPlanScreen({ onNavigate }: ImprovementPlanProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 pb-20">
       {/* HEADER */}
-      <div className="bg-gradient-to-r from-blue-600 to-teal-500 px-6 pt-6 pb-20 rounded-b-[2rem] shadow-md relative">
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="bg-gradient-to-br from-blue-600 via-blue-600 to-teal-500 px-6 pt-6 pb-20 rounded-b-3xl shadow-xl relative"
+      >
         <div className="max-w-7xl mx-auto flex items-center gap-4">
-          <button
-            onClick={() => onNavigate?.("dashboard")}
-            className="p-2 bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors"
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => navigate("/")}
+            className="p-2 bg-white/10 rounded-lg text-white hover:bg-white/20 transition-colors backdrop-blur-sm"
           >
             <ArrowLeft className="w-5 h-5" />
-          </button>
+          </motion.button>
 
           <div>
-            <h1 className="text-xl text-white font-bold">Improvement Plan</h1>
-            <p className="text-blue-100 text-[10px] uppercase tracking-widest opacity-80">
+            <h1 className="text-2xl text-white">Improvement Plan</h1>
+            <p className="text-blue-100 text-sm mt-0.5">
               Personalized Strategy
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* CONTENT */}
       <div className="max-w-3xl mx-auto px-6 relative z-10 -mt-10">
         {/* SCORE COMPARISON CARD */}
-        <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100 mb-8">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          whileHover={{ y: -4, transition: { duration: 0.2 } }}
+          className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100 mb-8 hover:shadow-2xl transition-shadow duration-300"
+        >
           <div className="flex items-center justify-around text-center">
-            <div>
-              <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.3, type: "spring", stiffness: 200 }}
+            >
+              <p className="text-xs text-gray-500 font-medium mb-2">
                 Current
               </p>
-              <p className="text-3xl font-black text-gray-900">{currentScore}</p>
-            </div>
+              <p className="text-4xl text-gray-900">{currentScore}</p>
+            </motion.div>
 
-            <div className="flex flex-col items-center">
-              <div className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center">
-                <Target className="w-4 h-4 text-gray-300" />
+            <motion.div 
+              initial={{ scale: 0, rotate: -180 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ duration: 0.5, delay: 0.4, type: "spring" }}
+              className="flex flex-col items-center"
+            >
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center shadow-sm">
+                <Target className="w-5 h-5 text-gray-400" />
               </div>
-              <p className="text-[10px] text-gray-400 mt-1 uppercase">Potential</p>
-            </div>
+              <p className="text-xs text-gray-500 mt-2">Potential</p>
+            </motion.div>
 
-            <div>
-              <p className="text-[10px] text-gray-400 font-bold uppercase mb-1">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.5, type: "spring", stiffness: 200 }}
+            >
+              <p className="text-xs text-gray-500 font-medium mb-2">
                 Target
               </p>
-              <p className="text-3xl font-black text-green-600">
+              <p className="text-4xl text-green-600">
                 {potentialScore}
               </p>
-            </div>
+            </motion.div>
           </div>
 
-          <div className="mt-6 p-3 bg-blue-50/50 rounded-xl border border-blue-100 text-center">
-            <p className="text-xs text-blue-700 font-medium">
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+            className="mt-6 p-4 bg-gradient-to-br from-blue-50 to-teal-50 rounded-xl border border-blue-200/50 text-center"
+          >
+            <p className="text-sm text-blue-800">
               Complete the priority actions below to boost your score.
             </p>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* PRIORITY ACTIONS */}
-        <h2 className="text-sm font-bold text-gray-400 uppercase tracking-widest mb-4 ml-1">
+        <motion.h2 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4"
+        >
           Priority Actions
-        </h2>
+        </motion.h2>
 
         <div className="space-y-6">
-          {improvements.map((item) => {
+          {improvements.map((item, index) => {
             const Icon = item.icon;
 
             return (
-              <div
+              <motion.div
                 key={item.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+                whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
                 className={`group bg-white rounded-2xl border border-gray-100 shadow-sm transition-all duration-300 ${item.hoverBorder} hover:shadow-lg`}
               >
                 <div className="p-5">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex gap-4">
-                      <div
-                        className={`w-10 h-10 ${item.bgColor} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform`}
+                      <motion.div
+                        whileHover={{ rotate: 5, scale: 1.1 }}
+                        transition={{ duration: 0.2 }}
+                        className={`w-12 h-12 ${item.bgColor} rounded-xl flex items-center justify-center shadow-sm`}
                       >
-                        <Icon className={`w-5 h-5 ${item.color}`} />
-                      </div>
+                        <Icon className={`w-6 h-6 ${item.color}`} />
+                      </motion.div>
 
                       <div>
                         <div className="flex items-center gap-2 mb-1">
-                          <h3 className="text-sm font-bold text-gray-900">
+                          <h3 className="text-sm font-medium text-gray-900">
                             {item.title}
                           </h3>
                           <span
-                            className={`text-[9px] font-bold px-2 py-0.5 rounded-full uppercase ${getPriorityColor(
+                            className={`text-xs font-medium px-2 py-0.5 rounded-full uppercase ${getPriorityColor(
                               item.priority
                             )}`}
                           >
                             {item.priority}
                           </span>
                         </div>
-                        <p className="text-xs text-gray-500">{item.description}</p>
+                        <p className="text-sm text-gray-600">{item.description}</p>
                       </div>
                     </div>
 
-                    <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-lg">
+                    <motion.span 
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.3, delay: 0.5 + index * 0.1, type: "spring" }}
+                      className="text-xs font-medium text-green-600 bg-green-50 px-3 py-1 rounded-lg border border-green-200"
+                    >
                       {item.impact}
-                    </span>
+                    </motion.span>
                   </div>
 
                   {/* PROGRESS AREA */}
                   <div className="mb-6">
-                    <div className="flex justify-between text-[10px] font-bold text-gray-400 uppercase mb-2">
+                    <div className="flex justify-between text-xs font-medium text-gray-500 mb-2">
                       <span>Current: {item.currentAmount}</span>
-                      <span className="text-gray-900">{item.currentProgress}%</span>
+                      <motion.span 
+                        key={item.currentProgress}
+                        initial={{ scale: 1.2, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="text-gray-900"
+                      >
+                        {mounted ? item.currentProgress : 0}%
+                      </motion.span>
                     </div>
 
-                    <Progress value={item.currentProgress} className="h-1.5" />
+                    <Progress value={mounted ? item.currentProgress : 0} className="h-2" />
 
-                    <div className="text-right mt-1.5">
-                      <span className="text-[10px] text-gray-400">
+                    <div className="text-right mt-2">
+                      <span className="text-xs text-gray-500">
                         Target: {item.targetAmount}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 mb-4 text-[11px] text-gray-500 font-medium">
-                    <Clock className="w-3.5 h-3.5" />
+                  <div className="flex items-center gap-2 mb-4 text-xs text-gray-600 font-medium">
+                    <Clock className="w-4 h-4" />
                     <span>Est. Timeline: {item.timeline}</span>
                   </div>
 
                   {/* CHECKLIST STEPS */}
-                  <div className="space-y-2 border-t border-gray-50 pt-4">
+                  <div className="space-y-2 border-t border-gray-100 pt-4">
                     {item.steps.map((step, idx) => (
-                      <button
+                      <motion.button
                         key={idx}
+                        whileHover={{ x: 4 }}
+                        transition={{ duration: 0.2 }}
                         onClick={() => toggleStep(step)}
-                        className="w-full flex items-start gap-3 p-2.5 rounded-xl hover:bg-gray-50 transition-colors text-left group/step"
+                        className="w-full flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 transition-colors text-left group/step"
                       >
-                        <CheckCircle2
-                          className={`w-4 h-4 mt-0.5 flex-shrink-0 transition-colors ${
-                            completedSteps.includes(step)
-                              ? "text-green-500"
-                              : "text-gray-200 group-hover/step:text-gray-300"
-                          }`}
-                        />
+                        <motion.div
+                          animate={{
+                            scale: completedSteps.includes(step) ? [1, 1.2, 1] : 1,
+                            rotate: completedSteps.includes(step) ? [0, 10, -10, 0] : 0
+                          }}
+                          transition={{ duration: 0.4 }}
+                        >
+                          <CheckCircle2
+                            className={`w-5 h-5 mt-0.5 flex-shrink-0 transition-colors ${
+                              completedSteps.includes(step)
+                                ? "text-green-500"
+                                : "text-gray-300 group-hover/step:text-gray-400"
+                            }`}
+                          />
+                        </motion.div>
                         <span
-                          className={`text-xs ${
+                          className={`text-sm transition-all duration-300 ${
                             completedSteps.includes(step)
                               ? "text-gray-400 line-through"
                               : "text-gray-700"
@@ -290,36 +367,60 @@ export function ImprovementPlanScreen({ onNavigate }: ImprovementPlanProps) {
                         >
                           {step}
                         </span>
-                      </button>
+                      </motion.button>
                     ))}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
         {/* BOTTOM TIP */}
-        <div className="mt-8 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 text-white shadow-xl">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.7 }}
+          whileHover={{ y: -4, transition: { duration: 0.2 } }}
+          className="mt-8 bg-gradient-to-br from-gray-800 via-gray-900 to-gray-800 rounded-2xl p-6 text-white shadow-xl hover:shadow-2xl transition-shadow duration-300"
+        >
           <div className="flex items-center gap-3 mb-2">
-            <Target className="w-5 h-5 text-teal-400" />
-            <h3 className="font-bold text-sm">Strategic Focus</h3>
+            <motion.div
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+            >
+              <Target className="w-6 h-6 text-teal-400" />
+            </motion.div>
+            <h3 className="font-medium text-base">Strategic Focus</h3>
           </div>
-          <p className="text-xs text-gray-300 leading-relaxed">
-            Focus first on your <span className="text-white font-bold">Build Emergency Fund</span>{" "}
+          <p className="text-sm text-gray-300 leading-relaxed">
+            Focus first on your <span className="text-white font-medium">Build Emergency Fund</span>{" "}
             goal. Lenders prioritize applicants with high liquidity as it drastically
             reduces default risk.
           </p>
-        </div>
+        </motion.div>
 
         {/* FOOTER */}
-        <div className="mt-12 mb-6 text-center">
-          <div className="bg-gray-100/50 rounded-xl p-4 inline-block w-full">
-            <p className="text-[10px] text-gray-400 uppercase tracking-widest">
-              © 2024 LoanHook • All Rights Reserved
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 1 }}
+          className="mt-12 mb-6"
+        >
+          <div className="bg-gradient-to-br from-gray-100 to-gray-50 rounded-xl p-4 border border-gray-200/50">
+            <p className="text-xs text-gray-600 text-center leading-relaxed">
+              © Copyright 2024 LoanHook. All rights reserved. Jy'Mir Fuller &
+              Joseph Ajumobi |{" "}
+              <a href="#" className="text-blue-600 hover:underline transition-colors duration-200">
+                Privacy Policy
+              </a>{" "}
+              |{" "}
+              <a href="#" className="text-blue-600 hover:underline transition-colors duration-200">
+                Terms of Service
+              </a>
             </p>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

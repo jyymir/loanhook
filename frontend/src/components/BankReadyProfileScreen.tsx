@@ -17,6 +17,7 @@ import {
   getMonthlyExpenses,
   getDebtToIncome
 } from "../utils/financialMetrics";
+import { motion } from "motion/react";
 
 interface BankReadyProfileProps {
   onNavigate?: (screen: string) => void;
@@ -89,15 +90,25 @@ export function BankReadyProfileScreen({ onNavigate }: BankReadyProfileProps) {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      <div className="bg-gradient-to-br from-blue-600 to-teal-500 px-6 pt-12 pb-8 rounded-b-3xl">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4 }}
+        className="bg-gradient-to-br from-blue-600 to-teal-500 px-6 pt-12 pb-8 rounded-b-3xl shadow-lg"
+      >
         <h1 className="text-2xl text-white mb-2">Bank-Ready Profile</h1>
         <p className="text-blue-100">Your shareable financial summary</p>
-      </div>
+      </motion.div>
 
       <div className="px-6 -mt-6">
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-shadow duration-300"
+        >
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-teal-500 rounded-full flex items-center justify-center text-white text-xl">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-teal-500 rounded-full flex items-center justify-center text-white text-xl shadow-md">
               {initials}
             </div>
             <div>
@@ -113,13 +124,19 @@ export function BankReadyProfileScreen({ onNavigate }: BankReadyProfileProps) {
             </div>
             <Progress value={profileData.readinessScore} className="h-2" />
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <div className="px-6 mt-6">
         <h2 className="text-lg text-gray-900 mb-4">Key Metrics</h2>
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-white rounded-xl p-4 border border-gray-100">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            className="bg-white rounded-xl p-4 border border-gray-100 shadow-md hover:shadow-lg transition-shadow duration-300"
+          >
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                 <Shield className="w-4 h-4 text-blue-600" />
@@ -128,9 +145,15 @@ export function BankReadyProfileScreen({ onNavigate }: BankReadyProfileProps) {
             </div>
             <div className="text-2xl text-gray-900 mb-1">{formattedStabilityScore}</div>
             <Progress value={profileData.stabilityScore} className="h-1.5" />
-          </div>
+          </motion.div>
 
-          <div className="bg-white rounded-xl p-4 border border-gray-100">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.25 }}
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            className="bg-white rounded-xl p-4 border border-gray-100 shadow-md hover:shadow-lg transition-shadow duration-300"
+          >
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                 <TrendingUp className="w-4 h-4 text-green-600" />
@@ -139,9 +162,15 @@ export function BankReadyProfileScreen({ onNavigate }: BankReadyProfileProps) {
             </div>
             <div className="text-2xl text-gray-900 mb-1">{formattedSavingsRatio}%</div>
             <Progress value={profileData.savingsRatio} className="h-1.5" />
-          </div>
+          </motion.div>
 
-          <div className="bg-white rounded-xl p-4 border border-gray-100">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            className="bg-white rounded-xl p-4 border border-gray-100 shadow-md hover:shadow-lg transition-shadow duration-300"
+          >
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                 <DollarSign className="w-4 h-4 text-purple-600" />
@@ -150,9 +179,15 @@ export function BankReadyProfileScreen({ onNavigate }: BankReadyProfileProps) {
             </div>
             <div className="text-2xl text-gray-900 mb-1">{formattedAffordabilityScore}</div>
             <Progress value={profileData.affordabilityScore} className="h-1.5" />
-          </div>
+          </motion.div>
 
-          <div className="bg-white rounded-xl p-4 border border-gray-100">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.35 }}
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            className="bg-white rounded-xl p-4 border border-gray-100 shadow-md hover:shadow-lg transition-shadow duration-300"
+          >
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 bg-teal-100 rounded-lg flex items-center justify-center">
                 <Calendar className="w-4 h-4 text-teal-600" />
@@ -161,58 +196,73 @@ export function BankReadyProfileScreen({ onNavigate }: BankReadyProfileProps) {
             </div>
             <div className="text-lg text-gray-900 mb-1">{profileData.generatedDate}</div>
             <p className="text-xs text-gray-500">latest snapshot</p>
-          </div>
+          </motion.div>
         </div>
       </div>
 
       <div className="px-6 mt-6">
         <h2 className="text-lg text-gray-900 mb-4">Financial Snapshot</h2>
-        <div className="bg-white rounded-xl border border-gray-100 divide-y divide-gray-100">
-          <div className="p-4 flex items-center justify-between">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="bg-white rounded-xl border border-gray-100 divide-y divide-gray-100 shadow-md hover:shadow-lg transition-shadow duration-300"
+        >
+          <div className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200">
             <span className="text-sm text-gray-600">Monthly Income</span>
             <span className="text-base text-gray-900">
               ${profileData.monthlyIncome.toLocaleString()}
             </span>
           </div>
-          <div className="p-4 flex items-center justify-between">
+          <div className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200">
             <span className="text-sm text-gray-600">Monthly Expenses</span>
             <span className="text-base text-gray-900">
               ${profileData.monthlyExpenses.toLocaleString()}
             </span>
           </div>
-          <div className="p-4 flex items-center justify-between">
+          <div className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200">
             <span className="text-sm text-gray-600">Total Savings</span>
             <span className="text-base text-green-600">
               ${profileData.savings.toLocaleString()}
             </span>
           </div>
-          <div className="p-4 flex items-center justify-between">
+          <div className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200">
             <span className="text-sm text-gray-600">Current Debt</span>
             <span className="text-base text-gray-900">
               ${profileData.debt.toLocaleString()}
             </span>
           </div>
-          <div className="p-4 flex items-center justify-between">
+          <div className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors duration-200">
             <span className="text-sm text-gray-600">Debt-to-Income Ratio</span>
             <span className="text-base text-green-600">{formattedDebtToIncome}%</span>
           </div>
-        </div>
+        </motion.div>
       </div>
 
       <div className="px-6 mt-6">
         <h2 className="text-lg text-gray-900 mb-4">Financial Strengths</h2>
-        <div className="bg-white rounded-xl border border-gray-100 divide-y divide-gray-100">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.45 }}
+          className="bg-white rounded-xl border border-gray-100 divide-y divide-gray-100 shadow-md hover:shadow-lg transition-shadow duration-300"
+        >
           {strengths.map((strength, index) => (
-            <div key={index} className="p-4 flex items-center gap-3">
+            <div key={index} className="p-4 flex items-center gap-3 hover:bg-gray-50 transition-colors duration-200">
               <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
               <span className="text-sm text-gray-900">{strength}</span>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
       <div className="px-6 mt-6">
-        <div className="bg-gradient-to-br from-blue-600 to-teal-500 rounded-2xl p-6 text-white">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="bg-gradient-to-br from-blue-600 to-teal-500 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow duration-300"
+        >
           <div className="flex items-center gap-3 mb-3">
             <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
               <Shield className="w-6 h-6" />
@@ -228,18 +278,32 @@ export function BankReadyProfileScreen({ onNavigate }: BankReadyProfileProps) {
             This profile reflects your current dashboard data and financial
             readiness metrics inside LoanHook.
           </p>
-        </div>
+        </motion.div>
       </div>
 
       <div className="px-6 mt-6 mb-6 space-y-3">
-        <button className="w-full h-12 bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 text-white rounded-xl flex items-center justify-center gap-2">
+        <motion.button 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.55 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full h-12 bg-gradient-to-r from-blue-600 to-teal-500 hover:from-blue-700 hover:to-teal-600 text-white rounded-xl flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all duration-300"
+        >
           <Share2 className="w-5 h-5" />
           Share Profile
-        </button>
-        <button className="w-full h-12 bg-white hover:bg-gray-50 text-gray-900 rounded-xl border border-gray-200 flex items-center justify-center gap-2">
+        </motion.button>
+        <motion.button 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full h-12 bg-white hover:bg-gray-50 text-gray-900 rounded-xl border border-gray-200 flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all duration-300"
+        >
           <Download className="w-5 h-5" />
           Download PDF
-        </button>
+        </motion.button>
       </div>
 
       <div className="px-6 mb-6">
