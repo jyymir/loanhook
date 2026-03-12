@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import type { Applicant } from "../types/financial";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
+
 export function useApplicantData() {
   const navigate = useNavigate();
   const [applicant, setApplicant] = useState<Applicant | null>(null);
@@ -19,7 +21,7 @@ export function useApplicantData() {
           return;
         }
 
-        const response = await fetch("http://localhost:5001/api/dashboard", {
+        const response = await fetch(`${API_BASE_URL}/api/dashboard`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
