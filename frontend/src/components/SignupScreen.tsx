@@ -45,16 +45,18 @@ export function SignupScreen({ onSignup }: SignupScreenProps) {
       const data = await signup(formData.fullName, formData.email, formData.password);
 
       if (data && data.token) {
+        localStorage.setItem("token", data.token);
+
         if ("user" in data && data.user) {
           localStorage.setItem("user", JSON.stringify(data.user));
         }
 
         onSignup(data.token);
-      } else {
+       } else {
         setError(data.error || "Signup failed. Try a different email.");
       }
     } catch (err) {
-      setError("Server connection failed. Is your backend running?");
+      setError("Server connection failed. ");
     } finally {
       setIsLoading(false);
     }

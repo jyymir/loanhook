@@ -63,7 +63,7 @@ export function LoginScreen({ onLogin }: LoginScreenProps) {
         setError(data.error || "Login failed. Please check your credentials.");
       }
     } catch (err) {
-      setError("Server connection failed. Is your backend running?");
+      setError("Server connection failed.");
     } finally {
       setIsSubmitting(false);
     }
